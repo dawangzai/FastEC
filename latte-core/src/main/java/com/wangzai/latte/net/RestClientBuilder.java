@@ -1,5 +1,7 @@
 package com.wangzai.latte.net;
 
+import android.content.Context;
+
 import com.wangzai.latte.net.callback.IError;
 import com.wangzai.latte.net.callback.IFailure;
 import com.wangzai.latte.net.callback.IRequest;
@@ -12,12 +14,14 @@ import java.util.WeakHashMap;
  */
 
 public class RestClientBuilder {
+
+    private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
     private String mUrl;
-    private WeakHashMap<String, Object> mParams;
     private IRequest mIRequest;
     private ISuccess mISuccess;
     private IFailure mIFailure;
     private IError mIError;
+    private Context mContext;
 
     RestClientBuilder() {
     }
@@ -28,15 +32,12 @@ public class RestClientBuilder {
     }
 
     public final RestClientBuilder params(WeakHashMap<String, Object> params) {
-        this.mParams = params;
+        PARAMS.putAll(params);
         return this;
     }
 
     public final RestClientBuilder params(String key, String value) {
-        if (mParams == null) {
-            mParams = new WeakHashMap<>();
-        }
-        mParams.put(key, value);
+        PARAMS.put(key, value);
         return this;
     }
 
@@ -60,7 +61,12 @@ public class RestClientBuilder {
         return this;
     }
 
+    public final RestClientBuilder loader(Context context) {
+        this.mContext = context;
+        return this;
+    }
+
     public final RestClient build() {
-        return new RestClient(mUrl,mParams,mIRequest,mISuccess,mIFailure,mIError);
+        return new RestClient(mUrl, PARAMS, mIRequest, mISuccess, mIFailure, mIError, mContext);
     }
 }

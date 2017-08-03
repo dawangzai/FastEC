@@ -3,6 +3,7 @@ package com.wangzai.fastec.example;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Toast;
 
 import com.wangzai.latte.delegate.LatteDelegate;
 import com.wangzai.latte.net.RestClient;
@@ -22,31 +23,34 @@ public class ExampleDelegate extends LatteDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-
+        testRestClient();
     }
 
-    private void testRestClient(){
+    private void testRestClient() {
         RestClient.builder()
-                .url("")
-                .params("","")
+//                .url("photos/")
+//                .params("id", "Dwu85P9SOIk")
+                .url("http://news.baidu.com")
+                .loader(getActivity())
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-
+//                        Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .failure(new IFailure() {
                     @Override
                     public void onFailure() {
-
+                        Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .error(new IError() {
                     @Override
                     public void onError(int code, String msg) {
-
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                     }
                 })
-                .build();
+                .build()
+                .get();
     }
 }
