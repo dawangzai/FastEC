@@ -8,6 +8,7 @@ import com.wangzai.latte.net.callback.IRequest;
 import com.wangzai.latte.net.callback.ISuccess;
 import com.wangzai.latte.ui.loader.LoaderStyle;
 
+import java.io.File;
 import java.util.WeakHashMap;
 
 import okhttp3.MediaType;
@@ -28,6 +29,10 @@ public class RestClientBuilder {
     private Context mContext;
     private LoaderStyle mLoaderStyle;
     private RequestBody mBody;
+    private File mFile = null;
+    private String mDownloadDir ;
+    private String mExtension ;
+    private String mName ;
 
     RestClientBuilder() {
     }
@@ -84,7 +89,46 @@ public class RestClientBuilder {
         return this;
     }
 
+    public final RestClientBuilder file(File file) {
+        this.mFile = file;
+        return this;
+    }
+
+    public final RestClientBuilder file(String file) {
+        this.mFile = new File(file);
+        return this;
+    }
+
+    public final RestClientBuilder name(String name) {
+        this.mName = name;
+        return this;
+    }
+
+    public final RestClientBuilder dir(String dir) {
+        this.mDownloadDir = dir;
+        return this;
+    }
+
+    public final RestClientBuilder extension(String extension) {
+        this.mExtension = extension;
+        return this;
+    }
+
     public final RestClient build() {
-        return new RestClient(mUrl, PARAMS, mIRequest, mISuccess, mIFailure, mIError, mBody, mContext, mLoaderStyle);
+        return new RestClient(
+                mUrl,
+                PARAMS,
+                mIRequest,
+                mISuccess,
+                mIFailure,
+                mIError,
+                mBody,
+                mContext,
+                mLoaderStyle,
+                mFile,
+                mDownloadDir,
+                mExtension,
+                mName
+        );
     }
 }

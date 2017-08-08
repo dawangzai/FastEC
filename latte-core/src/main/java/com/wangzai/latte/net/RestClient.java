@@ -7,12 +7,12 @@ import com.wangzai.latte.net.callback.IFailure;
 import com.wangzai.latte.net.callback.IRequest;
 import com.wangzai.latte.net.callback.ISuccess;
 import com.wangzai.latte.net.callback.RequestCallBack;
+import com.wangzai.latte.net.download.DownloadHandler;
 import com.wangzai.latte.ui.loader.LatteLoader;
 import com.wangzai.latte.ui.loader.LoaderStyle;
 
 import java.io.File;
 import java.util.WeakHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -36,6 +36,9 @@ public class RestClient {
     private final LoaderStyle LOADER_STYLE;
     private final RequestBody BODY;
     private final File FILE;
+    private final String DOWNLOAD_DIR;
+    private final String EXTENSION;
+    private final String NAME;
 
     public RestClient(String url,
                       WeakHashMap<String, Object> params,
@@ -46,11 +49,14 @@ public class RestClient {
                       RequestBody body,
                       Context context,
                       LoaderStyle loaderStyle,
-                      File file) {
+                      File file, String downloadDir, String extension, String name) {
         URL = url;
         CONTEXT = context;
         LOADER_STYLE = loaderStyle;
         BODY = body;
+        DOWNLOAD_DIR = downloadDir;
+        EXTENSION = extension;
+        NAME = name;
         PARAMS.putAll(params);
         REQUEST = request;
         SUCCESS = success;
@@ -140,5 +146,18 @@ public class RestClient {
 
     public final void delete() {
         request(HttpMethod.DELETE);
+    }
+
+    public final void download() {
+        new DownloadHandler(
+                URL,
+                REQUEST,
+                DOWNLOAD_DIR ,
+                EXTENSION,
+                NAME,
+                SUCCESS,
+                FAILURE,
+                ERROR
+        ).handlerDownload();
     }
 }

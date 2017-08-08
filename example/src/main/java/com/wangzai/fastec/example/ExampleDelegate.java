@@ -30,24 +30,24 @@ public class ExampleDelegate extends LatteDelegate {
         RestClient.builder()
 //                .url("photos/")
 //                .params("id", "Dwu85P9SOIk")
-                .url("http://news.baidu.com")
+                .url("http://127.0.0.1/index")
                 .loader(getActivity())
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-//                        Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), response, Toast.LENGTH_LONG).show();
                     }
                 })
                 .failure(new IFailure() {
                     @Override
                     public void onFailure() {
-                        Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "onFailure", Toast.LENGTH_LONG).show();
                     }
                 })
                 .error(new IError() {
                     @Override
                     public void onError(int code, String msg) {
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                     }
                 })
                 .build()
