@@ -3,7 +3,9 @@ package com.wangzai.latte.net.callback;
 import android.content.Context;
 import android.os.Handler;
 
+import com.wangzai.latte.net.RestCreator;
 import com.wangzai.latte.ui.loader.LatteLoader;
+import com.wangzai.latte.ui.loader.LoaderStyle;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,7 +21,7 @@ public class RequestCallBack implements Callback<String> {
     private final IFailure FAILURE;
     private final IError ERROR;
     private final Context CONTEXT;
-    private static final Handler HANDLER = new Handler();
+    private static final Handler HANDLER = new Handler(); // TODO: 2017/8/7 测试加载动画需要删除
 
     public RequestCallBack(IRequest request,
                            ISuccess success,
@@ -47,14 +49,7 @@ public class RequestCallBack implements Callback<String> {
             }
         }
 
-        if (CONTEXT != null) {
-            HANDLER.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    LatteLoader.stopLoading();
-                }
-            }, 5000);
-        }
+        requestFinish();
     }
 
     @Override
@@ -67,6 +62,21 @@ public class RequestCallBack implements Callback<String> {
             REQUEST.onRequestEnd();
         }
 
-        LatteLoader.stopLoading();
+        requestFinish();
+    }
+
+    private void requestFinish() {
+        if (CONTEXT != null) {
+//            RestCreator.getParams().clear();
+//            LatteLoader.stopLoading();
+            // TODO: 2017/8/7 测试加载动画需要删除
+            HANDLER.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    RestCreator.getParams().clear();
+                    LatteLoader.stopLoading();
+                }
+            }, 3000);
+        }
     }
 }

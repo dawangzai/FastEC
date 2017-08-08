@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatDialog;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 
+import com.wang.avi.AVLoadingIndicatorView;
 import com.wangzai.latte.R;
 import com.wangzai.latte.util.dimen.DimenUtil;
 
@@ -23,11 +23,42 @@ public class LatteLoader {
 
     private static final ArrayList<AppCompatDialog> LOADERS = new ArrayList<>();
 
+    private static final String DEFAULT_LOADER = LoaderStyle.BallClipRotatePulseIndicator.name();
+
+//    public static void showLoading(Context context) {
+//        final AppCompatDialog dialog = new AppCompatDialog(context, R.style.dialog);
+//
+//        final ProgressBar progressBar = LoaderCreator.create(context);
+//        dialog.setContentView(progressBar);
+//
+//        final Window dialogWindow = dialog.getWindow();
+//        int deviceWidth = DimenUtil.getScreenWidth();
+//        int deviceHeight = DimenUtil.getScreenHeight();
+//        if (dialogWindow != null) {
+//            final WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//            lp.width = deviceWidth / LOADER_SIZE_SCALE;
+//            lp.height = deviceHeight / LOADER_SIZE_SCALE;
+//            lp.height = lp.height + deviceHeight / LOADER_OFFSET_SCALE;
+//            lp.gravity = Gravity.CENTER;
+//        }
+//
+//        LOADERS.add(dialog);
+//        dialog.show();
+//    }
+
     public static void showLoading(Context context) {
+        showLoading(context, DEFAULT_LOADER);
+    }
+
+    public static void showLoading(Context context, Enum<LoaderStyle> loaderStyleEnum) {
+        showLoading(context, loaderStyleEnum.name());
+    }
+
+    public static void showLoading(Context context, String type) {
         final AppCompatDialog dialog = new AppCompatDialog(context, R.style.dialog);
 
-        final ProgressBar progressBar = LoaderCreator.create(context);
-        dialog.setContentView(progressBar);
+        AVLoadingIndicatorView avLoadingIndicatorView = LoaderCreator.create(context, type);
+        dialog.setContentView(avLoadingIndicatorView);
 
         final Window dialogWindow = dialog.getWindow();
         int deviceWidth = DimenUtil.getScreenWidth();

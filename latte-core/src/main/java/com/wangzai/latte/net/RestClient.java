@@ -8,9 +8,15 @@ import com.wangzai.latte.net.callback.IRequest;
 import com.wangzai.latte.net.callback.ISuccess;
 import com.wangzai.latte.net.callback.RequestCallBack;
 import com.wangzai.latte.ui.loader.LatteLoader;
+import com.wangzai.latte.ui.loader.LoaderStyle;
 
+import java.io.File;
 import java.util.WeakHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -27,20 +33,30 @@ public class RestClient {
     private final IFailure FAILURE;
     private final IError ERROR;
     private final Context CONTEXT;
+    private final LoaderStyle LOADER_STYLE;
+    private final RequestBody BODY;
+    private final File FILE;
 
     public RestClient(String url,
                       WeakHashMap<String, Object> params,
                       IRequest request,
                       ISuccess success,
                       IFailure failure,
-                      IError error, Context context) {
+                      IError error,
+                      RequestBody body,
+                      Context context,
+                      LoaderStyle loaderStyle,
+                      File file) {
         URL = url;
         CONTEXT = context;
+        LOADER_STYLE = loaderStyle;
+        BODY = body;
         PARAMS.putAll(params);
         REQUEST = request;
         SUCCESS = success;
         FAILURE = failure;
         ERROR = error;
+        FILE = file;
     }
 
     public static RestClientBuilder builder() {
@@ -56,7 +72,7 @@ public class RestClient {
         }
 
         if (CONTEXT != null) {
-            LatteLoader.showLoading(CONTEXT);
+            LatteLoader.showLoading(CONTEXT, LOADER_STYLE);
         }
 
         switch (httpMethod) {
@@ -66,11 +82,24 @@ public class RestClient {
             case HttpMethod.POST:
                 call = service.post(URL, PARAMS);
                 break;
+            case HttpMethod.POST_RAW:
+                call = service.postRaw(URL, BODY);
+                break;
             case HttpMethod.PUT:
                 call = service.put(URL, PARAMS);
                 break;
+            case HttpMethod.PUT_RAW:
+                call = service.putRaw(URL, BODY);
+                break;
             case HttpMethod.DELETE:
                 call = service.delete(URL, PARAMS);
+                break;
+            case HttpMethod.UPLOAD:
+                final RequestBody requestBody =
+                        RequestBody.create(MediaType.parse(MultipartBody.FORM.toString()), FILE);
+                final MultipartBody.Part body =
+                        MultipartBody.Part.createFormData("file", FILE.getName(), requestBody);
+                call = service.upload(URL, body);
                 break;
             default:
                 break;
@@ -88,11 +117,25 @@ public class RestClient {
     }
 
     public final void post() {
-        request(HttpMethod.POST);
+        if (BODY == null) {
+            request(HttpMethod.POST);
+        } else {
+            if (!PARAMS.isEmpty()) {
+                throw new RuntimeException("params must be null!");
+            }
+            request(HttpMethod.POST_RAW);
+        }
     }
 
     public final void put() {
-        request(HttpMethod.PUT);
+        if (BODY == null) {
+            request(HttpMethod.PUT);
+        } else {
+            if (!PARAMS.isEmpty()) {
+                throw new RuntimeException("params must be null!");
+            }
+            request(HttpMethod.PUT_RAW);
+        }
     }
 
     public final void delete() {
