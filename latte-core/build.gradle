@@ -29,6 +29,7 @@ dependencies {
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
     compile project(':latte-annotations')
     //图片字体
@@ -49,5 +50,9 @@ dependencies {
     //loading
     compile 'com.wang.avi:library:2.1.3'
     //json
-    compile 'com.alibaba:fastjson:1.1.57.android'
+    compile 'com.alibaba:fastjson:1.1.61.android'
+    //Banner
+    compile 'com.bigkoo:convenientbanner:2.0.5'
+    //greenDao
+    compile 'org.greenrobot:greendao:3.2.2'
 }

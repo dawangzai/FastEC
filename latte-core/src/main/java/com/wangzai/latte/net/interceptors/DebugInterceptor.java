@@ -1,5 +1,6 @@
 package com.wangzai.latte.net.interceptors;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.RawRes;
 
 import com.wangzai.latte.util.file.FileUtil;
@@ -42,7 +43,7 @@ public class DebugInterceptor extends BaseInterceptor {
     }
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         String url = chain.request().url().toString();
         if (url.contains(DEBUG_URL)) {
             return debugResponse(chain, DEBUG_RAW_ID);

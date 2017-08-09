@@ -18,7 +18,7 @@ public final class Configurator {
     private static final ArrayList<Interceptor> INTERCEPTORS = new ArrayList<>();
 
     private Configurator() {
-        LATTE_CONFIGS.put(ConfigKeys.CONFIG_READY.name(), false);
+        LATTE_CONFIGS.put(ConfigKeys.CONFIG_READY, false);
     }
 
     static Configurator getInstance() {
@@ -35,7 +35,7 @@ public final class Configurator {
 
     public final void configure() {
         initIcons();
-        LATTE_CONFIGS.put(ConfigKeys.CONFIG_READY.name(), true);
+        LATTE_CONFIGS.put(ConfigKeys.CONFIG_READY, true);
     }
 
     @SuppressWarnings("unchecked")
@@ -49,19 +49,19 @@ public final class Configurator {
     }
 
     public final Configurator withApiHost(String apiHost) {
-        LATTE_CONFIGS.put(ConfigKeys.API_HOST.name(), apiHost);
+        LATTE_CONFIGS.put(ConfigKeys.API_HOST, apiHost);
         return this;
     }
 
     public final Configurator withInterceptor(Interceptor interceptor){
         INTERCEPTORS.add(interceptor);
-        LATTE_CONFIGS.put(ConfigKeys.INTERCEPTOR.name(),INTERCEPTORS);
+        LATTE_CONFIGS.put(ConfigKeys.INTERCEPTOR,INTERCEPTORS);
         return this;
     }
 
     public final Configurator withInterceptors(ArrayList<Interceptor> interceptors){
         INTERCEPTORS.addAll(interceptors);
-        LATTE_CONFIGS.put(ConfigKeys.INTERCEPTOR.name(),INTERCEPTORS);
+        LATTE_CONFIGS.put(ConfigKeys.INTERCEPTOR,INTERCEPTORS);
         return this;
     }
 
@@ -80,7 +80,7 @@ public final class Configurator {
     }
 
     private void checkConfiguration() {
-        final boolean isReady = (boolean) LATTE_CONFIGS.get(ConfigKeys.CONFIG_READY.name());
+        final boolean isReady = (boolean) LATTE_CONFIGS.get(ConfigKeys.CONFIG_READY);
         if (!isReady) {
             throw new RuntimeException("Configuration is not ready,call configure");
         }
