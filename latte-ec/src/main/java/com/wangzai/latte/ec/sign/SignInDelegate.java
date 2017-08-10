@@ -1,5 +1,6 @@
 package com.wangzai.latte.ec.sign;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -10,6 +11,8 @@ import android.widget.Toast;
 import com.wangzai.latte.delegate.LatteDelegate;
 import com.wangzai.latte.ec.R;
 import com.wangzai.latte.ec.R2;
+import com.wangzai.latte.net.RestClient;
+import com.wangzai.latte.net.callback.ISuccess;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,22 +28,42 @@ public class SignInDelegate extends LatteDelegate {
     @BindView(R2.id.edit_sign_in_password)
     TextInputEditText mPassword = null;
 
+    private ISignListener mISignListener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof ISignListener) {
+            mISignListener = (ISignListener) activity;
+        }
+    }
+
+    @Override
+    public Object setLayout() {
+        return R.layout.delegate_sign_in;
+    }
+
+    @Override
+    public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
+
+    }
+
     @OnClick(R2.id.btn_sign_in)
     void onClickSignIn() {
         if (checkForm()) {
-//            RestClient.builder()
-//                    .url("http://192.168.56.1:8080/RestDataServer/api/user_profile.php")
-//                    .params("email", mEmail.getText().toString())
-//                    .params("password", mPassword.getText().toString())
-//                    .success(new ISuccess() {
-//                        @Override
-//                        public void onSuccess(String response) {
-//                            LatteLogger.json("USER_PROFILE", response);
-//                            SignHandler.onSignIn(response, mISignListener);
-//                        }
-//                    })
-//                    .build()
-//                    .post();
+            RestClient.builder()
+                    .url("http://127.0.0.1/user_profile")
+                    .params("email", mEmail.getText().toString())
+                    .params("password", mPassword.getText().toString())
+                    .success(new ISuccess() {
+                        @Override
+                        public void onSuccess(String response) {
+                            SignHandler.onSignIn(response, mISignListener);
+                        }
+                    })
+                    .build()
+                    .post();
         }
     }
 
@@ -60,16 +83,6 @@ public class SignInDelegate extends LatteDelegate {
     @OnClick(R2.id.tv_link_sign_up)
     void onClickLink() {
         getSupportDelegate().start(new SignUpDelegate());
-    }
-
-    @Override
-    public Object setLayout() {
-        return R.layout.delegate_sign_in;
-    }
-
-    @Override
-    public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-
     }
 
     private boolean checkForm() {

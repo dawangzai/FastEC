@@ -1,5 +1,6 @@
 package com.wangzai.latte.ec.sign;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -10,6 +11,9 @@ import android.widget.Toast;
 import com.wangzai.latte.delegate.LatteDelegate;
 import com.wangzai.latte.ec.R;
 import com.wangzai.latte.ec.R2;
+import com.wangzai.latte.net.RestClient;
+import com.wangzai.latte.net.callback.IFailure;
+import com.wangzai.latte.net.callback.ISuccess;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -29,6 +33,17 @@ public class SignUpDelegate extends LatteDelegate {
     TextInputEditText mPassword = null;
     @BindView(R2.id.edit_sign_up_re_password)
     TextInputEditText mRePassword = null;
+
+    private ISignListener mISignLIstener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof ISignListener) {
+            mISignLIstener = (ISignListener) activity;
+        }
+    }
 
     @Override
     public Object setLayout() {
@@ -58,7 +73,23 @@ public class SignUpDelegate extends LatteDelegate {
 //                    })
 //                    .build()
 //                    .post();
-            Toast.makeText(getContext(), "校验成功", Toast.LENGTH_SHORT).show();
+            RestClient.builder()
+                    .url("http://127.0.0.1/user_profile")
+                    .success(new ISuccess() {
+                        @Override
+                        public void onSuccess(String response) {
+                            SignHandler.onSignUp(response,mISignLIstener);
+                        }
+                    })
+                    .failure(new IFailure() {
+                        @Override
+                        public void onFailure() {
+                            Toast.makeText(getContext(), "失败", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .build()
+                    .get();
+
         }
     }
 
