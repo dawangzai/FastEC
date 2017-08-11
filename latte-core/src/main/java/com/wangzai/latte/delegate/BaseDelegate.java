@@ -25,7 +25,7 @@ public abstract class BaseDelegate extends SwipeBackFragment {
 
     @SuppressWarnings("SpellCheckingInspection")
     private Unbinder mUnbinder;
-    private FragmentActivity _mActivity;
+    protected FragmentActivity _mActivity;
 
     public abstract Object setLayout();
 
