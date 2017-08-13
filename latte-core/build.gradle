@@ -55,4 +55,6 @@ dependencies {
     compile 'com.bigkoo:convenientbanner:2.0.5'
     //greenDao
     compile 'org.greenrobot:greendao:3.2.2'
+    //RecyclerView
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 }

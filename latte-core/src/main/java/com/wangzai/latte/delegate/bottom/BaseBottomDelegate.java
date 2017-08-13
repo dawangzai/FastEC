@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * Created by wangzai on 2017/8/11
@@ -29,13 +29,13 @@ import butterknife.BindView;
 
 public abstract class BaseBottomDelegate extends LatteDelegate implements View.OnClickListener {
 
-    private final List<BottomTabBean> tabBeens = new ArrayList<>();
+    private final List<BottomTabBean> tabBeans = new ArrayList<>();
     private final List<BottomItemDelegate> itemDelegates = new ArrayList<>();
     private final LinkedHashMap<BottomTabBean, BottomItemDelegate> items = new LinkedHashMap<>();
 
     private int mCurrentDelegate = 0;
     private int mIndexDelegate = 0;
-    private int mClickColor = Color.RED;
+    private int mClickedColor = Color.RED;
 
     @BindView(R2.id.bottom_bar)
     LinearLayoutCompat mBottomBar = null;
@@ -54,7 +54,7 @@ public abstract class BaseBottomDelegate extends LatteDelegate implements View.O
         mIndexDelegate = setIndexDelegate();
 
         if (setClickColor() != 0) {
-            mClickColor = setClickColor();
+            mClickedColor = setClickColor();
         }
 
         final ItemBuilder builder = ItemBuilder.builder();
@@ -63,7 +63,7 @@ public abstract class BaseBottomDelegate extends LatteDelegate implements View.O
         for (Map.Entry<BottomTabBean, BottomItemDelegate> item : items.entrySet()) {
             final BottomTabBean key = item.getKey();
             final BottomItemDelegate value = item.getValue();
-            tabBeens.add(key);
+            tabBeans.add(key);
             itemDelegates.add(value);
         }
     }
@@ -77,25 +77,49 @@ public abstract class BaseBottomDelegate extends LatteDelegate implements View.O
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         final int size = items.size();
         for (int i = 0; i < size; i++) {
-            LayoutInflater.from(getContext()).inflate(R.layout.bottom_item_icon_text_layout, mBottomBar, false);
+            LayoutInflater.from(getContext()).inflate(R.layout.bottom_item_icon_text_layout, mBottomBar);
             RelativeLayout item = (RelativeLayout) mBottomBar.getChildAt(i);
 
+            item.setTag(i);
             item.setOnClickListener(this);
 
             final IconTextView itemIcon = (IconTextView) item.getChildAt(0);
             final AppCompatTextView itemTitle = (AppCompatTextView) item.getChildAt(1);
-            BottomTabBean bean = tabBeens.get(i);
+            BottomTabBean bean = tabBeans.get(i);
             itemIcon.setText(bean.getIcon());
             itemTitle.setText(bean.getTitle());
             if (i == mIndexDelegate) {
-                itemIcon.setTextColor(mClickColor);
-                itemTitle.setTextColor(mClickColor);
+                itemIcon.setTextColor(mClickedColor);
+                itemTitle.setTextColor(mClickedColor);
             }
+        }
+
+        final SupportFragment[] delegateArray = itemDelegates.toArray(new SupportFragment[size]);
+        loadMultipleRootFragment(R.id.bottom_bar_delegate_container, mIndexDelegate, delegateArray);
+    }
+
+    private void resetColor() {
+        final int count = mBottomBar.getChildCount();
+        for (int i = 0; i < count; i++) {
+            final RelativeLayout item = (RelativeLayout) mBottomBar.getChildAt(i);
+            final IconTextView itemIcon = (IconTextView) item.getChildAt(0);
+            itemIcon.setTextColor(Color.GRAY);
+            final AppCompatTextView itemTitle = (AppCompatTextView) item.getChildAt(1);
+            itemTitle.setTextColor(Color.GRAY);
         }
     }
 
     @Override
     public void onClick(View v) {
-
+        final int tag = (int) v.getTag();
+        resetColor();
+        final RelativeLayout item = (RelativeLayout) v;
+        final IconTextView itemIcon = (IconTextView) item.getChildAt(0);
+        itemIcon.setTextColor(mClickedColor);
+        final AppCompatTextView itemTitle = (AppCompatTextView) item.getChildAt(1);
+        itemTitle.setTextColor(mClickedColor);
+        getSupportDelegate().showHideFragment(itemDelegates.get(tag), itemDelegates.get(mCurrentDelegate));
+        //注意先后顺序
+        mCurrentDelegate = tag;
     }
 }

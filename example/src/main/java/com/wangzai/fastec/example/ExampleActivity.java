@@ -11,6 +11,7 @@ import com.wangzai.latte.ec.launcher.ILauncherListener;
 import com.wangzai.latte.ec.launcher.LauncherDelegate;
 import com.wangzai.latte.ec.launcher.LauncherScrollDelegate;
 import com.wangzai.latte.ec.launcher.OnLauncherFinishTag;
+import com.wangzai.latte.ec.main.ECBottomDelegate;
 import com.wangzai.latte.ec.sign.ISignListener;
 import com.wangzai.latte.ec.sign.SignUpDelegate;
 
@@ -30,7 +31,6 @@ public class ExampleActivity extends ProxyActivity implements
     @Override
     public LatteDelegate setRootDelegate() {
         return new LauncherDelegate();
-//        return new SignUpDelegate();
     }
 
     @Override
@@ -48,9 +48,11 @@ public class ExampleActivity extends ProxyActivity implements
         switch (tag) {
             case SIGNED:
                 Toast.makeText(this, "启动登录成功", Toast.LENGTH_SHORT).show();
+                startWithPop(new ECBottomDelegate());
                 break;
             case NOT_SIGNED:
                 Toast.makeText(this, "启动没有登录", Toast.LENGTH_SHORT).show();
+                startWithPop(new ECBottomDelegate());
                 break;
             default:
                 break;

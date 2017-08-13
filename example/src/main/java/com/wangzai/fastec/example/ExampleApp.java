@@ -18,7 +18,8 @@ public class ExampleApp extends Application {
         super.onCreate();
         Latte.init(this)
                 .withIcon(new FontAwesomeModule())
-                .withApiHost("http://127.0.0.1/")
+//        http://127.0.0.1/
+                .withApiHost("http://192.168.1.100:8080/RestServer/api/")
                 .withInterceptor(new DebugInterceptor("user_profile", R.raw.user_profile))
                 .configure();
 
