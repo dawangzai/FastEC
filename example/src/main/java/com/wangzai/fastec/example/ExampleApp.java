@@ -19,8 +19,9 @@ public class ExampleApp extends Application {
         Latte.init(this)
                 .withIcon(new FontAwesomeModule())
 //        http://127.0.0.1/
-                .withApiHost("http://192.168.1.100:8080/RestServer/api/")
-                .withInterceptor(new DebugInterceptor("user_profile", R.raw.user_profile))
+                .withApiHost("http://127.0.0.1/")
+//                .withApiHost("http://192.168.1.100:8080/RestServer/api/")
+                .withInterceptor(new DebugInterceptor("index_data", R.raw.index_data))
                 .configure();
 
         initStetho();

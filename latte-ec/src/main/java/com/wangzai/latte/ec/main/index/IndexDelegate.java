@@ -2,6 +2,7 @@ package com.wangzai.latte.ec.main.index;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.wangzai.latte.delegate.bottom.BottomItemDelegate;
 import com.wangzai.latte.ec.R;
 import com.wangzai.latte.ec.R2;
+import com.wangzai.latte.ui.recycler.BaseDecoration;
 import com.wangzai.latte.ui.refresh.RefreshHandler;
 
 import butterknife.BindView;
@@ -43,7 +45,22 @@ public class IndexDelegate extends BottomItemDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-        mRefreshHandler = new RefreshHandler(mRefreshLayout);
+        mRefreshHandler = RefreshHandler.create(mRefreshLayout,mRecyclerView,new IndexDataConvert());
+//        RestClient.builder()
+//                .url("http://127.0.0.1/index_data")
+//                .success(new ISuccess() {
+//                    @Override
+//                    public void onSuccess(String response) {
+//                        Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
+//                        IndexDataConvert convert = new IndexDataConvert();
+//                        convert.setJsonData(response);
+//                        ArrayList<MultipleItemEntity> list = convert.convert();
+//                        String imageUrl = list.get(1).getField(MultipleFields.IMAGE_URL);
+//                        Toast.makeText(getContext(), imageUrl, Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .build()
+//                .get();
     }
 
     private void initRefreshLayout() {
@@ -58,14 +75,16 @@ public class IndexDelegate extends BottomItemDelegate {
     private void initRecyclerView() {
         final GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
         mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.addItemDecoration
+                (BaseDecoration.create(ContextCompat.getColor(getContext(), R.color.app_background), 5));
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-//        initRecyclerView();
         initRefreshLayout();
-        mRefreshHandler.firstPage("index.php");
+        initRecyclerView();
+        mRefreshHandler.firstPage("http://127.0.0.1/index_data");
     }
 }
 

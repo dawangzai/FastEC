@@ -53,8 +53,15 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.61.android'
     //Banner
     compile 'com.bigkoo:convenientbanner:2.0.5'
+    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
     //greenDao
     compile 'org.greenrobot:greendao:3.2.2'
-    //RecyclerView
+    //RecyclerView Adapter
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+    //RecyclerView Divider
+    compile 'com.choices.divider:RecyclerView_Divider:1.0.0'
+    //图片加载库
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 }

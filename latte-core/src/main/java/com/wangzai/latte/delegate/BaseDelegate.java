@@ -27,16 +27,17 @@ public abstract class BaseDelegate extends SwipeBackFragment {
     private Unbinder mUnbinder;
     protected FragmentActivity _mActivity;
 
-    public abstract Object setLayout();
-
-    public abstract void onBindView(@Nullable Bundle savedInstanceState, View rootView);
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         DELEGATE.onAttach(activity);
         _mActivity = DELEGATE.getActivity();
     }
+
+
+    public abstract Object setLayout();
+
+    public abstract void onBindView(@Nullable Bundle savedInstanceState, View rootView);
 
     @Nullable
     @Override
