@@ -1,6 +1,6 @@
 package com.wangzai.latte.ui.recycler;
 
-import android.support.annotation.ColorRes;
+import android.support.annotation.ColorInt;
 
 import com.choices.divider.DividerItemDecoration;
 
@@ -10,11 +10,11 @@ import com.choices.divider.DividerItemDecoration;
 
 public class BaseDecoration extends DividerItemDecoration {
 
-    private BaseDecoration(@ColorRes int color, int size) {
+    private BaseDecoration(@ColorInt int color, int size) {
         setDividerLookup(new DividerLookupImpl(color, size));
     }
 
-    public static BaseDecoration create(@ColorRes int color, int size) {
+    public static BaseDecoration create(@ColorInt int color, int size) {
         return new BaseDecoration(color, size);
     }
 }

@@ -1,19 +1,20 @@
 package com.wangzai.fastec.example;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.wangzai.latte.activities.ProxyActivity;
 import com.wangzai.latte.delegate.LatteDelegate;
 import com.wangzai.latte.ec.launcher.ILauncherListener;
 import com.wangzai.latte.ec.launcher.LauncherDelegate;
-import com.wangzai.latte.ec.launcher.LauncherScrollDelegate;
 import com.wangzai.latte.ec.launcher.OnLauncherFinishTag;
 import com.wangzai.latte.ec.main.ECBottomDelegate;
 import com.wangzai.latte.ec.sign.ISignListener;
-import com.wangzai.latte.ec.sign.SignUpDelegate;
 
 public class ExampleActivity extends ProxyActivity implements
         ISignListener,
@@ -22,10 +23,18 @@ public class ExampleActivity extends ProxyActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.hide();
         }
+
     }
 
     @Override
